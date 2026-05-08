@@ -12,6 +12,14 @@ def is_clause_satisfied(clause, assignment):
         if (is_positive and assignment.get(var, False)) or (not is_positive and not assignment.get(var, True)):
             return True
     return False
+# function to check if the entire CNF formula is satisfied by the current variable assignment
+def formula_satisfied(cnf_formula, assignment):
+    return all(is_clause_satisfied(clause, assignment) for clause in cnf_formula)
 
-for clause in cnf_formula:
-    print(is_clause_satisfied(clause, var_mapping)) # True, because A is True
+def find_unit_clauses(cnf_formula, assignment):
+    unit_clauses = []
+    for clause in cnf_formula:
+        unassigned_literals = [lit for lit in clause if abs(lit) not in assignment]
+        if len(unassigned_literals) == 1:
+            unit_clauses.append(unassigned_literals[0])
+    return unit_clauses
