@@ -42,6 +42,40 @@ def find_unit_clause(formula, assignment):
             return unassigned[0]
 
     return None
+def is_clause_falsified(clause, assignment):
+    for lit in clause:
+        var = abs(lit)
+        # If any variable is unassigned, the clause still has hope
+        if var not in assignment:
+            return False 
+            
+        val = assignment[var]
+        # If any literal evaluates to True, the clause is not falsified
+        if (lit > 0 and val) or (lit < 0 and not val):
+            return False 
+            
+    # All literals evaluated to False
+    return True
+def get_all_variables(formula):
+    variables = set()
+    for clause in formula:
+        for lit in clause:
+            variables.add(abs(lit))
+    return variables
+# recursive backtracking solver
+def sat_solver(formula, assignment):
+    # force unit clauses
+    while True:
+        unit_clause = find_unit_clause(formula, assignment)
+        if unit_clause is None:
+            break
+        var = abs(unit_clause)
+        val = unit_clause > 0
+        assignment[var] = val
+    # base case: if the formula is satisfied, return the assignment
+    if formula_satisfied(formula, assignment):
+        return assignment
+
 
 # OUTPUTS
 print("Formula satisfied:",
